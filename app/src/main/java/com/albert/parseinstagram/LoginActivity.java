@@ -11,12 +11,14 @@ import android.widget.EditText;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private EditText etUserName;
     private EditText etPassWord;
     private Button btnLogin;
+    private Button btnSign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         etUserName=findViewById(R.id.etUserName);
         etPassWord=findViewById(R.id.etPassWord);
         btnLogin=findViewById(R.id.btnLogin);
+        btnSign=findViewById(R.id.btnSign);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,6 +36,33 @@ public class LoginActivity extends AppCompatActivity {
                 String user = etUserName.getText().toString();
                 String pass = etPassWord.getText().toString();
                 login(user,pass);
+            }
+        });
+
+        btnSign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser user = new ParseUser();
+// Set core properties
+                final String userN = etUserName.getText().toString();
+                final String pass = etPassWord.getText().toString();
+                user.setUsername(userN);
+                user.setPassword(pass);
+                //user.setEmail("email@example.com");
+// Set custom properties
+               // user.put("phone", "650-253-0000");
+// Invoke signUpInBackground
+                user.signUpInBackground(new SignUpCallback() {
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            // Hooray! Let them use the app now.
+                            login(userN,pass);
+                        } else {
+                            // Sign up didn't succeed. Look at the ParseException
+                            // to figure out what went wrong
+                        }
+                    }
+                });
             }
         });
     }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnSubmit;
     public String photoFileName = "photo.jpg";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-    File photoFile;
+    private File photoFile;
+    private ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         btnImage = findViewById(R.id.btnCaptureImage);
         ivPoster = findViewById(R.id.ivPosterImage);
         btnSubmit = findViewById(R.id.btnSubmit);
+        pb = (ProgressBar) findViewById(R.id.pbLoading);
 
         //queryPosts();
         btnImage.setOnClickListener(new View.OnClickListener() {
@@ -124,11 +127,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void savePost(String description, ParseUser parseUser, File photoFile) {
+        pb.setVisibility(ProgressBar.VISIBLE);
         Post post = new Post();
         post.setDescription(description);
         post.setUser(parseUser);
         post.setImage(new ParseFile(photoFile));
-        post.saveInBackground(new SaveCallback() {
+        post.saveInBackground(
+                new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if(e != null)
@@ -138,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 Log.d(TAG,"success ! ");
+                // run a background job and once complete
+                //pb.setVisibility(ProgressBar.INVISIBLE);
                 Toast.makeText(MainActivity.this, "SUCCESS !", Toast.LENGTH_SHORT).show();
                 etDescription.setText("");
             }
