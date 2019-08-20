@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.albert.parseinstagram.fragments.ComposeFragment;
+import com.albert.parseinstagram.fragments.PostsFragment;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -58,9 +59,10 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment fragment=null;
+                Fragment fragment;
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
+                        fragment=new PostsFragment();
                         Toast.makeText(MainActivity.this, "HOME !", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_compose:
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_profil:
                     default:
                         //TODO:swap fragment
-                        fragment = new ComposeFragment();
+                        fragment = new ProfileFragment();
                         Toast.makeText(MainActivity.this, "PROFIL !", Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -78,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        // Set default selection
+        mNavigationView.setSelectedItemId(R.id.action_home);
     }
 
 
